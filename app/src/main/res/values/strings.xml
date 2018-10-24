@@ -6,4 +6,11 @@
     <string name="samples_total_started">Gathered %1$d samples over %2$d</string>
     <string name="sample_last_timestamp">Last gathered sample at %1$s</string>
     <string name="sample_last_values">Lat: %1$d Lon: %2$d</string>
+
+    <string name="toast_sample_start_success">Sampling started</string>
+    <string name="toast_sample_start_failure">Sampling could not start</string>
+
+    <string name="RECEIVER_RECOGNITION_TAG">sems.activityrecognition.gui.result_receivers.ActivityRecognitionResultReceiver</string>
+    <string name="RECEIVER_TRANSITION_TAG">sems.activityrecognition.gui.result_receivers.ActivityTransitionResultReceiver</string>
+    <string name="RESULT_TAG">sems.activityrecognition.gui.RESULT</string>
 </resources>

@@ -1,30 +1,40 @@
 package sems.activityrecognition.gui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.location.ActivityRecognitionResult;
+import com.google.android.gms.location.ActivityTransitionResult;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import sems.activityrecognition.R;
+import sems.activityrecognition.gui.result_receivers.ActivityRecognitionResultReceiver;
+import sems.activityrecognition.gui.result_receivers.ActivityTransitionResultReceiver;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int DUTY_CYCLE_INTERVAL = 3;
+    public static final int DUTY_CYCLE_INTERVAL_MS = 5000;
 
     private Button sampleBtn;
     private TextView totalSamplesTxt;
     private TextView lastSampleTime;
     private TextView lastSampleValues;
 
-    private ScheduledExecutorService executorService;
+    private ActivityServiceHelper activityServiceHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +43,55 @@ public class MainActivity extends AppCompatActivity {
 
         lookUpViews();
 
-        executorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+        ActivityRecognitionResultReceiver activityRecognitionResultReceiver = new ActivityRecognitionResultReceiver(this);
+        ActivityTransitionResultReceiver activityTransitionResultReceiver = new ActivityTransitionResultReceiver(this);
+        activityRecognitionResultReceiver.registerReceiver();
+        activityTransitionResultReceiver.registerReceiver();
+
+        activityServiceHelper = new ActivityServiceHelper(this);
     }
 
     public void onSampleButtonClick(View view) {
-        executorService.scheduleAtFixedRate(new Runnable() {
+        ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this);
+        Task task = activityRecognitionClient.requestActivityUpdates(DUTY_CYCLE_INTERVAL_MS, activityServiceHelper.getActivityRecognitionServicePendingIntent());
+        task.addOnSuccessListener(new OnSuccessListener() {
             @Override
-            public void run() {
+            public void onSuccess(Object o) {
+                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
+                Log.d("fuck", "started recognition");
             }
-        }, 0, DUTY_CYCLE_INTERVAL, TimeUnit.SECONDS);
+        });
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_failure, Toast.LENGTH_LONG).show();
+                Log.d("fuck", "NO recognition");
+            }
+        });
+
+        Task task1 = activityRecognitionClient.requestActivityTransitionUpdates(activityServiceHelper.buildTransitionRequest(), activityServiceHelper.getActivityTransitionServicePendingIntent());
+        task1.addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
+                Log.d("fuck", "started transiziotn");
+            }
+        });
+        task1.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_failure, Toast.LENGTH_LONG).show();
+                Log.d("fuck", "NO transiziotn");
+            }
+        });
+    }
+
+    public void onActivityRecognitionResult(ActivityRecognitionResult result) {
+
+    }
+
+    public void onActivityTransitionResult(ActivityTransitionResult result) {
+
     }
 
     private String getCurrentTimeFormatted() {
