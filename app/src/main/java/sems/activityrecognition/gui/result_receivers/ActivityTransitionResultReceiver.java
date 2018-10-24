@@ -25,9 +25,7 @@ public class ActivityTransitionResultReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("fuck", "received data");
-        boolean b = intent.getParcelableExtra("b") instanceof ActivityTransitionResult;
-        Log.d("fuck", "instance? " + b);
+        Log.d("fuck", "received tranzit data");
 
         ActivityTransitionResult result = intent.getParcelableExtra(parent.getString(R.string.RESULT_TAG));
         parent.onActivityTransitionResult(result);

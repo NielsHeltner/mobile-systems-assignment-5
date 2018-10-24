@@ -16,6 +16,8 @@ import com.google.android.gms.location.ActivityTransitionResult;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,11 +89,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onActivityRecognitionResult(ActivityRecognitionResult result) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("activityRecognition");
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        String t = simpleDateFormat.format(new Date(result.getTime()));
+
+        Log.d("fuck", "time from result: " + t);
+
+        Log.d("fuck", "time from current: " + getCurrentTimeFormatted());
+
+        ref.setValue("Hello");
     }
 
     public void onActivityTransitionResult(ActivityTransitionResult result) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("activityTransition");
 
+        //ref.child(result.get)
+
+        ref.setValue("Hello");
     }
 
     private String getCurrentTimeFormatted() {
