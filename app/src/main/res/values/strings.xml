@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ActivityRecognition</string>
+    <string name="sample_btn_start">Start sampling</string>
+    <string name="sample_btn_stop">Stop sampling</string>
+    <string name="samples_total_stopped">No samples gathered yet</string>
+    <string name="samples_total_started">Gathered %1$d samples over %2$d</string>
+    <string name="sample_last_timestamp">Last gathered sample at %1$s</string>
+    <string name="sample_last_values">Lat: %1$d Lon: %2$d</string>
 </resources>
