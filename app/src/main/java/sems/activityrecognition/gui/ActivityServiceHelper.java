@@ -3,14 +3,13 @@ package sems.activityrecognition.gui;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 
 import com.google.android.gms.location.ActivityTransition;
 import com.google.android.gms.location.ActivityTransitionRequest;
 import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import sems.activityrecognition.services.ActivityRecognitionService;
@@ -36,46 +35,23 @@ public class ActivityServiceHelper {
 
     public ActivityTransitionRequest buildTransitionRequest() {
         List<ActivityTransition> transitions = new ArrayList();
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.IN_VEHICLE)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.IN_VEHICLE)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.ON_BICYCLE)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.ON_BICYCLE)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.RUNNING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.RUNNING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.STILL)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.STILL)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.WALKING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                .build());
-        transitions.add(new ActivityTransition.Builder()
-                .setActivityType(DetectedActivity.WALKING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                .build());
+        List<Integer> activities = Arrays.asList(
+                DetectedActivity.IN_VEHICLE,
+                DetectedActivity.ON_BICYCLE,
+                DetectedActivity.RUNNING,
+                DetectedActivity.STILL,
+                DetectedActivity.WALKING
+        );
+        for (int activity : activities) {
+            transitions.add(new ActivityTransition.Builder()
+                    .setActivityType(activity)
+                    .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
+                    .build());
+            transitions.add(new ActivityTransition.Builder()
+                    .setActivityType(activity)
+                    .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+                    .build());
+        }
         return new ActivityTransitionRequest(transitions);
     }
 
