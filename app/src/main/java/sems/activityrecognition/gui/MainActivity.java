@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object o) {
                 Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
-                Log.d("fuck", "started recognition");
             }
         });
         task.addOnFailureListener(new OnFailureListener() {
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Object o) {
                 Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
-                Log.d("fuck", "started transiziotn");
             }
         });
         task1.addOnFailureListener(new OnFailureListener() {

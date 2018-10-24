@@ -21,6 +21,7 @@ public class ActivityTransitionService extends IntentService {
 
     public ActivityTransitionService() {
         super(TAG);
+        Log.d("fuck", "trantzi service started");
     }
 
     @Override

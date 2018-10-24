@@ -19,6 +19,7 @@ public class ActivityRecognitionService extends IntentService {
 
     public ActivityRecognitionService() {
         super(TAG);
+        Log.d("fuck", "recog service started");
     }
 
     @Override
