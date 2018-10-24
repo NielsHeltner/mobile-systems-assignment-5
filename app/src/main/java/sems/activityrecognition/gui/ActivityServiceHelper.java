@@ -35,22 +35,24 @@ public class ActivityServiceHelper {
 
     public ActivityTransitionRequest buildTransitionRequest() {
         List<ActivityTransition> transitions = new ArrayList();
-        List<Integer> activities = Arrays.asList(
+        Integer[] activities = new Integer[]{
                 DetectedActivity.IN_VEHICLE,
                 DetectedActivity.ON_BICYCLE,
                 DetectedActivity.RUNNING,
                 DetectedActivity.STILL,
                 DetectedActivity.WALKING
-        );
+        };
+        Integer[] transitionTypes = new Integer[]{
+                ActivityTransition.ACTIVITY_TRANSITION_ENTER,
+                ActivityTransition.ACTIVITY_TRANSITION_EXIT
+        };
         for (int activity : activities) {
-            transitions.add(new ActivityTransition.Builder()
-                    .setActivityType(activity)
-                    .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-                    .build());
-            transitions.add(new ActivityTransition.Builder()
-                    .setActivityType(activity)
-                    .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT)
-                    .build());
+            for (int transitionType : transitionTypes) {
+                transitions.add(new ActivityTransition.Builder()
+                        .setActivityType(activity)
+                        .setActivityTransition(transitionType)
+                        .build());
+            }
         }
         return new ActivityTransitionRequest(transitions);
     }
