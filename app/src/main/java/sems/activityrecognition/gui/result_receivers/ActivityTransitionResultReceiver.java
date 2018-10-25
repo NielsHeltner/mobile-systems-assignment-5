@@ -24,8 +24,6 @@ public class ActivityTransitionResultReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("fuck", "received tranzit data");
-
         ActivityTransitionResult result = intent.getParcelableExtra(parent.getString(R.string.RESULT_TAG));
         long timestamp = intent.getLongExtra(parent.getString(R.string.TIME_TAG), -1);
         parent.onActivityTransitionResult(result, timestamp);

@@ -21,7 +21,7 @@ public class ActivityTransitionService extends IntentService {
         if (ActivityTransitionResult.hasResult(intent)) {
             ActivityTransitionResult result = ActivityTransitionResult.extractResult(intent);
 
-            Log.d("fuck", "result in transition service: " + result.getTransitionEvents().toString());
+            Log.d(getString(R.string.app_name), "Result in transition service: " + result.getTransitionEvents().toString());
 
             Intent i = new Intent(getString(R.string.RECEIVER_TRANSITION_TAG));
             i.putExtra(getString(R.string.RESULT_TAG), result);

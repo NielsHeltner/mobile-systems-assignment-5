@@ -24,8 +24,6 @@ public class ActivityRecognitionResultReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("fuck", "received data recog");
-
         ActivityRecognitionResult result = intent.getParcelableExtra(parent.getString(R.string.RESULT_TAG));
         parent.onActivityRecognitionResult(result);
     }

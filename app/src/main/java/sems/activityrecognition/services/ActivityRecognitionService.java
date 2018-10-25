@@ -21,7 +21,7 @@ public class ActivityRecognitionService extends IntentService {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
 
-            Log.d("fuck", "result in recognition service: " + result.getProbableActivities().toString());
+            Log.d(getString(R.string.app_name), "Result in recognition service: " + result.getProbableActivities().toString());
 
             Intent i = new Intent(getString(R.string.RECEIVER_RECOGNITION_TAG));
             i.putExtra(getString(R.string.RESULT_TAG), result);
