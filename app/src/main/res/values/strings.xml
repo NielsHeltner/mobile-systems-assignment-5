@@ -1,16 +1,22 @@
 <resources>
     <string name="app_name">ActivityRecognition</string>
+
     <string name="sample_btn_start">Start sampling</string>
     <string name="sample_btn_stop">Stop sampling</string>
-    <string name="samples_total_stopped">No samples gathered yet</string>
-    <string name="samples_total_started">Gathered %1$d samples over %2$d</string>
-    <string name="sample_last_timestamp">Last gathered sample at %1$s</string>
-    <string name="sample_last_values">Lat: %1$d Lon: %2$d</string>
+
+    <string name="sample_recog_time">Last recognition sample gathered at %1$s</string>
+    <string name="sample_recog_value">Last recognition: %1$s</string>
+    <string name="sample_trans_time">Last transition sample gathered at %1$s</string>
+    <string name="sample_trans_value">Last transition sample: %1$s</string>
+
 
     <string name="toast_sample_start_success">Sampling started</string>
     <string name="toast_sample_start_failure">Sampling could not start</string>
+    <string name="toast_sample_stop">Sampling stopped</string>
+
 
     <string name="RECEIVER_RECOGNITION_TAG">sems.activityrecognition.gui.result_receivers.ActivityRecognitionResultReceiver</string>
     <string name="RECEIVER_TRANSITION_TAG">sems.activityrecognition.gui.result_receivers.ActivityTransitionResultReceiver</string>
     <string name="RESULT_TAG">sems.activityrecognition.gui.RESULT</string>
+    <string name="TIME_TAG">sems.activityrecognition.gui.TIME</string>
 </resources>

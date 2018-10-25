@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int DUTY_CYCLE_INTERVAL_MS = 5000;
 
     private Button sampleBtn;
-    private TextView totalSamplesTxt;
-    private TextView lastSampleTime;
-    private TextView lastSampleValues;
+    private TextView lastSampleRecogTime;
+    private TextView lastSampleRecogValue;
+    private TextView lastSampleTransTime;
+    private TextView lastSampleTransValue;
 
     private ActivityServiceHelper activityServiceHelper;
 
@@ -55,68 +56,75 @@ public class MainActivity extends AppCompatActivity {
 
     public void onSampleButtonClick(View view) {
         ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this);
-        Task task = activityRecognitionClient.requestActivityUpdates(DUTY_CYCLE_INTERVAL_MS, activityServiceHelper.getActivityRecognitionServicePendingIntent());
-        task.addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
-            }
-        });
-        task.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_failure, Toast.LENGTH_LONG).show();
-                Log.d("fuck", "NO recognition");
-            }
-        });
+        if (sampleBtn.getText().equals(getString(R.string.sample_btn_start))) {
+            Task task = activityRecognitionClient.requestActivityUpdates(DUTY_CYCLE_INTERVAL_MS, activityServiceHelper.getActivityRecognitionServicePendingIntent());
+            task.addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
+                    sampleBtn.setText(getString(R.string.sample_btn_stop));
+                }
+            });
+            task.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_sample_start_failure, Toast.LENGTH_LONG).show();
+                    Log.d("fuck", "NO recognition");
+                }
+            });
 
-        Task task1 = activityRecognitionClient.requestActivityTransitionUpdates(activityServiceHelper.buildTransitionRequest(), activityServiceHelper.getActivityTransitionServicePendingIntent());
-        task1.addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
-            }
-        });
-        task1.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.toast_sample_start_failure, Toast.LENGTH_LONG).show();
-                Log.d("fuck", "NO transiziotn");
-            }
-        });
+            Task task1 = activityRecognitionClient.requestActivityTransitionUpdates(activityServiceHelper.buildTransitionRequest(), activityServiceHelper.getActivityTransitionServicePendingIntent());
+            task1.addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_sample_start_success, Toast.LENGTH_SHORT).show();
+                }
+            });
+            task1.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(), R.string.toast_sample_start_failure, Toast.LENGTH_LONG).show();
+                    Log.d("fuck", "NO transiziotn");
+                }
+            });
+        }
+        else {
+            activityRecognitionClient.removeActivityUpdates(activityServiceHelper.getActivityRecognitionServicePendingIntent());
+            activityRecognitionClient.removeActivityTransitionUpdates(activityServiceHelper.getActivityTransitionServicePendingIntent());
+            Toast.makeText(getApplicationContext(), R.string.toast_sample_stop, Toast.LENGTH_LONG).show();
+            sampleBtn.setText(getString(R.string.sample_btn_start));
+        }
     }
 
     public void onActivityRecognitionResult(ActivityRecognitionResult result) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("activityRecognition");
+        DatabaseReference activityRecognitionRef = FirebaseDatabase.getInstance().getReference().child("activityRecognitions");
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        String t = simpleDateFormat.format(new Date(result.getTime()));
+        activityRecognitionRef.child(String.valueOf(result.getTime())).setValue(result.getProbableActivities());
 
-        Log.d("fuck", "time from result: " + t);
-
-        Log.d("fuck", "time from current: " + getCurrentTimeFormatted());
-
-        ref.setValue("Hello");
+        lastSampleRecogTime.setText(getString(R.string.sample_recog_time, getTimeFormatted(result.getTime())));
+        lastSampleRecogValue.setText(getString(R.string.sample_recog_value, result.getMostProbableActivity()));
     }
 
-    public void onActivityTransitionResult(ActivityTransitionResult result) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("activityTransition");
+    public void onActivityTransitionResult(ActivityTransitionResult result, long timestamp) {
+        DatabaseReference activityTransitionRef = FirebaseDatabase.getInstance().getReference().child("activityTransitions");
 
-        //ref.child(result.get)
+        activityTransitionRef.child(String.valueOf(timestamp)).setValue(result.getTransitionEvents());
 
-        ref.setValue("Hello");
+        lastSampleTransTime.setText(getString(R.string.sample_trans_time, getTimeFormatted(timestamp)));
+        lastSampleTransValue.setText(getString(R.string.sample_recog_value, result.getTransitionEvents()));
     }
 
-    private String getCurrentTimeFormatted() {
+    private String getTimeFormatted(long timeMs) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        return simpleDateFormat.format(new Date());
+        return simpleDateFormat.format(new Date(timeMs));
     }
 
     private void lookUpViews() {
         sampleBtn = findViewById(R.id.sampleBtn);
-        totalSamplesTxt = findViewById(R.id.totalSamplesTxt);
-        lastSampleTime = findViewById(R.id.lastSampleTime);
-        lastSampleValues = findViewById(R.id.lastSampleValues);
+        lastSampleRecogTime = findViewById(R.id.lastSampleRecogTime);
+        lastSampleRecogValue = findViewById(R.id.lastSampleRecogValue);
+        lastSampleTransTime = findViewById(R.id.lastSampleTransTime);
+        lastSampleTransValue = findViewById(R.id.lastSampleTransValue);
     }
 
 }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.ActivityTransitionResult;
 
 import sems.activityrecognition.R;
@@ -28,7 +27,8 @@ public class ActivityTransitionResultReceiver extends BroadcastReceiver {
         Log.d("fuck", "received tranzit data");
 
         ActivityTransitionResult result = intent.getParcelableExtra(parent.getString(R.string.RESULT_TAG));
-        parent.onActivityTransitionResult(result);
+        long timestamp = intent.getLongExtra(parent.getString(R.string.TIME_TAG), -1);
+        parent.onActivityTransitionResult(result, timestamp);
     }
 
     public void registerReceiver() {

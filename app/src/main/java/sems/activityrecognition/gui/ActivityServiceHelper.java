@@ -9,7 +9,6 @@ import com.google.android.gms.location.ActivityTransitionRequest;
 import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import sems.activityrecognition.services.ActivityRecognitionService;
